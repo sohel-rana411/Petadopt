@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-3">❤ My favorite pets</h2>
+<div class="row g-4">
+  {% for pet in pets %}<div class="col-sm-6 col-lg-4">{% include "pets/_card.html" %}</div>
+  {% empty %}<div class="col-12"><div class="alert alert-info">You haven't saved any pets yet. <a href="{% url 'pets:list' %}">Browse pets</a></div></div>{% endfor %}
+</div>
+{% endblock %}

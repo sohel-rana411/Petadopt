@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}Find a Pet · PawHome{% endblock %}
+{% block content %}
+<h2 class="mb-3">Find a pet</h2>
+<form method="get" class="card card-body shadow-sm mb-4">
+  <div class="row g-3">
+    <div class="col-md-4"><label class="form-label">Search</label>{{ filter.form.q }}</div>
+    <div class="col-md-4"><label class="form-label">Name</label>{{ filter.form.name }}</div>
+    <div class="col-md-4"><label class="form-label">Breed</label>{{ filter.form.breed }}</div>
+    <div class="col-md-3"><label class="form-label">Animal type</label>{{ filter.form.animal_type }}</div>
+    <div class="col-md-3"><label class="form-label">Gender</label>{{ filter.form.gender }}</div>
+    <div class="col-md-3"><label class="form-label">Location</label>{{ filter.form.location }}</div>
+    <div class="col-md-3"><label class="form-label">Adoption status</label>{{ filter.form.status }}</div>
+  </div>
+  <div class="mt-3"><button class="btn btn-primary">Search</button> <a href="{% url 'pets:list' %}" class="btn btn-outline-secondary">Reset</a></div>
+</form>
+<p class="text-muted">{{ paginator.count }} pet{{ paginator.count|pluralize }} found</p>
+<div class="row g-4">
+  {% for pet in pets %}<div class="col-sm-6 col-lg-4">{% include "pets/_card.html" %}</div>
+  {% empty %}<div class="col-12"><div class="alert alert-info">No pets match your search.</div></div>{% endfor %}
+</div>
+{% if is_paginated %}
+<nav class="mt-4"><ul class="pagination justify-content-center">
+  {% if page_obj.has_previous %}<li class="page-item"><a class="page-link" href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ page_obj.previous_page_number }}">Previous</a></li>{% endif %}
+  {% for n in paginator.page_range %}<li class="page-item {% if n == page_obj.number %}active{% endif %}"><a class="page-link" href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ n }}">{{ n }}</a></li>{% endfor %}
+  {% if page_obj.has_next %}<li class="page-item"><a class="page-link" href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ page_obj.next_page_number }}">Next</a></li>{% endif %}
+</ul></nav>
+{% endif %}
+{% endblock %}

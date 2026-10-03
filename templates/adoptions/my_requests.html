@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}My Adoption Requests · PawHome{% endblock %}
+{% block content %}
+<h2 class="mb-3">📋 My Adoption Requests</h2>
+{% if adoption_requests %}
+<div class="table-responsive"><table class="table table-hover bg-white shadow-sm align-middle">
+  <thead class="table-light"><tr><th>Pet</th><th>Date</th><th>Status</th></tr></thead>
+  <tbody>
+  {% for r in adoption_requests %}
+  <tr>
+    <td><a href="{% url 'pets:detail' r.pet.pk %}">{{ r.pet.name }}</a></td>
+    <td>{{ r.created_at|date:"d M Y" }}</td>
+    <td>{% if r.status == 'Pending' %}<span class="badge text-bg-warning">Pending</span>{% elif r.status == 'Approved' %}<span class="badge text-bg-success">Approved</span>{% else %}<span class="badge text-bg-danger">Rejected</span>{% endif %}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table></div>
+{% else %}
+<div class="alert alert-info">You haven't applied for any pets yet. <a href="{% url 'pets:list' %}">Find a pet</a></div>
+{% endif %}
+{% endblock %}

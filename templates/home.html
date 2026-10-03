@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="p-5 mb-4 bg-white rounded-3 shadow-sm text-center">
+  <h1 class="display-5 fw-bold">Find your new best friend 🐶🐱</h1>
+  <p class="lead text-muted">{{ available_count }} pet{{ available_count|pluralize }} waiting for a home · {{ adopted_count }} already adopted</p>
+  <form class="row g-2 justify-content-center" action="{% url 'pets:list' %}" method="get">
+    <div class="col-md-5"><input name="q" class="form-control form-control-lg" placeholder="Search by name, type, breed or location"></div>
+    <div class="col-auto"><button class="btn btn-primary btn-lg">Search</button></div>
+  </form>
+</div>
+<h3 class="mb-3">Latest pets</h3>
+<div class="row g-4">
+  {% for pet in latest_pets %}<div class="col-sm-6 col-lg-4">{% include "pets/_card.html" %}</div>
+  {% empty %}<p class="text-muted">No pets available right now.</p>{% endfor %}
+</div>
+<div class="text-center mt-4"><a href="{% url 'pets:list' %}" class="btn btn-outline-primary">Browse all pets</a></div>
+{% endblock %}

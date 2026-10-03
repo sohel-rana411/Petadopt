@@ -1,0 +1,20 @@
+<div class="card h-100 shadow-sm">
+  {% if pet.image %}<img src="{{ pet.image.url }}" class="card-img-top pet-img" alt="{{ pet.name }}">
+  {% else %}<div class="pet-ph">{% if pet.animal_type == 'Cat' %}🐈{% elif pet.animal_type == 'Bird' %}🐦{% elif pet.animal_type == 'Rabbit' %}🐇{% elif pet.animal_type == 'Dog' %}🐕{% else %}🐾{% endif %}</div>{% endif %}
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-start">
+      <h5 class="card-title mb-1">{{ pet.name }}</h5>
+      {% if pet.is_available %}<span class="badge text-bg-success">Available</span>{% else %}<span class="badge text-bg-secondary">Adopted</span>{% endif %}
+    </div>
+    <p class="card-text text-muted small mb-2">{{ pet.animal_type }}{% if pet.breed %} · {{ pet.breed }}{% endif %}<br>{{ pet.age_display }} · {{ pet.gender }} · 📍 {{ pet.location }}</p>
+  </div>
+  <div class="card-footer bg-white border-0 d-flex gap-2">
+    <a href="{% url 'pets:detail' pet.pk %}" class="btn btn-primary btn-sm flex-grow-1">View details</a>
+    {% if user.is_authenticated %}
+    <form method="post" action="{% url 'pets:favorite' pet.pk %}">{% csrf_token %}
+      <input type="hidden" name="next" value="{{ request.get_full_path }}">
+      <button class="btn btn-sm {% if pet.pk in favorite_ids %}btn-danger{% else %}btn-outline-danger{% endif %}" title="Favorite">❤</button>
+    </form>
+    {% endif %}
+  </div>
+</div>

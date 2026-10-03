@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Profile · PawHome{% endblock %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-md-5"><div class="card shadow-sm"><div class="card-body">
+    <h3>👤 {{ user.get_full_name|default:user.username }}</h3>
+    <table class="table table-sm mb-0">
+      <tr><th>Username</th><td>{{ user.username }}</td></tr>
+      <tr><th>Email</th><td>{{ user.email|default:"—" }}</td></tr>
+      <tr><th>Member since</th><td>{{ user.date_joined|date:"d M Y" }}</td></tr>
+    </table>
+  </div></div></div>
+  <div class="col-md-7"><div class="card shadow-sm"><div class="card-body">
+    <h5>My adoption requests ({{ total }})</h5>
+    <p><span class="badge text-bg-warning">Pending {{ stats.Pending }}</span>
+       <span class="badge text-bg-success">Approved {{ stats.Approved }}</span>
+       <span class="badge text-bg-danger">Rejected {{ stats.Rejected }}</span></p>
+    <a href="{% url 'adoptions:my_requests' %}" class="btn btn-primary btn-sm">View all requests</a>
+  </div></div></div>
+</div>
+{% endblock %}

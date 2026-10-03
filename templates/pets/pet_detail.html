@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ pet.name }} · PawHome{% endblock %}
+{% block content %}
+<div class="card shadow-sm"><div class="row g-0">
+  <div class="col-md-5">
+    {% if pet.image %}<img src="{{ pet.image.url }}" class="img-fluid rounded-start w-100" alt="{{ pet.name }}">
+    {% else %}<div class="pet-ph h-100" style="min-height:300px">🐾</div>{% endif %}
+  </div>
+  <div class="col-md-7"><div class="card-body">
+    <h2 class="card-title">{{ pet.name }}</h2>
+    <table class="table table-sm w-auto">
+      <tr><th>Type</th><td>{{ pet.animal_type }}</td></tr>
+      <tr><th>Breed</th><td>{{ pet.breed|default:"—" }}</td></tr>
+      <tr><th>Age</th><td>{{ pet.age_display }}</td></tr>
+      <tr><th>Gender</th><td>{{ pet.gender }}</td></tr>
+      <tr><th>Location</th><td>{{ pet.location }}</td></tr>
+      <tr><th>Status</th><td>{% if pet.is_available %}<span class="badge text-bg-success">Available</span>{% else %}<span class="badge text-bg-secondary">Adopted</span>{% endif %}</td></tr>
+    </table>
+    <h5>About {{ pet.name }}</h5>
+    <p>{{ pet.description|linebreaksbr }}</p>
+    <div class="d-flex flex-wrap gap-2 align-items-center">
+      {% if not pet.is_available %}
+        <div class="alert alert-danger mb-0">❌ This pet has already been adopted.</div>
+      {% elif not user.is_authenticated %}
+        <a class="btn btn-primary" href="{% url 'accounts:login' %}?next={{ request.path }}">Log in to apply</a>
+      {% elif has_pending %}
+        <div class="alert alert-warning mb-0">You already have a pending request for {{ pet.name }}. <a href="{% url 'adoptions:my_requests' %}">View</a></div>
+      {% else %}
+        <a class="btn btn-primary btn-lg" href="{% url 'adoptions:apply' pet.pk %}">Apply for Adoption</a>
+      {% endif %}
+      {% if user.is_authenticated %}
+      <form method="post" action="{% url 'pets:favorite' pet.pk %}">{% csrf_token %}
+        <button class="btn {% if is_favorite %}btn-danger{% else %}btn-outline-danger{% endif %}">❤ {% if is_favorite %}Remove from favorites{% else %}Add to favorites{% endif %}</button>
+      </form>{% endif %}
+    </div>
+  </div></div>
+</div></div>
+<a href="{% url 'pets:list' %}" class="d-inline-block mt-3">← Back to all pets</a>
+{% endblock %}
